@@ -31,9 +31,10 @@ public class User {
     @Column(nullable = false)
     private UserRoleEnum role;
 
-    public User(SignupRequestDto signupRequestDto) {
-        this.email = signupRequestDto.getEmail();
-        this.password = signupRequestDto.getPassword();
+    public User(String email, String password, SignupRequestDto signupRequestDto) {
+        this.email = email;
+        this.password = password;
+
         this.gender = signupRequestDto.getGender();
         this.number = signupRequestDto.getNumber();
         this.address = signupRequestDto.getAddress();

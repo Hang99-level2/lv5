@@ -24,26 +24,27 @@ public class UserService {
     @Transactional
     public SignupResponseDto signup(SignupRequestDto signupRequestDto) {
         String email = signupRequestDto.getEmail();
-        signupRequestDto.setPassword(passwordEncoder.encode(signupRequestDto.getPassword()));
-        Optional<User> checkEmail = userRepository.findByEmail(email);
+        String password = passwordEncoder.encode(signupRequestDto.getPassword());
 
+        Optional<User> checkEmail = userRepository.findByEmail(email);
         if (checkEmail.isPresent()) {
             throw new IllegalArgumentException("중복된 이메일 입니다.");
         }
-        User user = new User(signupRequestDto);
+
+        User user = new User(email, password, signupRequestDto);
         userRepository.save(user);
         return new SignupResponseDto(user);
     }
+
     public String login(LoginRequestDto loginRequestDto) {
         String email = loginRequestDto.getEmail();
-        String password = loginRequestDto.getPassword();
+        User user = userRepository.findByEmail(email).orElseThrow(()->new IllegalArgumentException("등록된 사용자가 없습니다."));
 
-        User user = userRepository.findByEmail(email).orElseThrow(
-                ()->new IllegalArgumentException("등록된 사용자가 없습니다.")
-        );
+        String password = loginRequestDto.getPassword();
         if(!passwordEncoder.matches(password,user.getPassword())){
             throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
         }
+
         return jwtUtil.createToken(email,user.getRole());
     }
 
