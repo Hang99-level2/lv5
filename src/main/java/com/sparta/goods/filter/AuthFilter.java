@@ -56,10 +56,7 @@ public class AuthFilter implements Filter {
 
                 //여기서 저장한 값 => 유저 정보
                 Claims info = jwtUtil.getUserInfoFromToken(token);
-                User user = userRepository.findByEmail(info.getSubject());
-                if(user == null){
-                    throw new AccessDeniedException("email이 없습니다.");
-                }
+                User user = userRepository.findByEmail(info.getSubject()).orElseThrow(()-> new IllegalArgumentException("이메일이 없어요"));
                 req.setAttribute("userId", user.getId());
                 req.setAttribute("role", user.getRole());
                 chain.doFilter(req, res);
