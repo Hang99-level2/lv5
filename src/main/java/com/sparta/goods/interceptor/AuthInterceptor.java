@@ -1,6 +1,6 @@
 package com.sparta.goods.interceptor;
 
-import com.sparta.goods.entity.UserRoleEnum;
+import com.sparta.goods.user.entity.UserRoleEnum;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.http.HttpStatus;

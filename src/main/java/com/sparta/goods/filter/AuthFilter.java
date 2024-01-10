@@ -1,18 +1,21 @@
 package com.sparta.goods.filter;
 
 
-import com.sparta.goods.entity.User;
-import com.sparta.goods.jwt.JwtUtil;
-import com.sparta.goods.repository.UserRepository;
+import com.sparta.goods.user.entity.User;
+import com.sparta.goods.util.JwtUtil;
+import com.sparta.goods.user.repository.UserRepository;
 import io.jsonwebtoken.Claims;
 import jakarta.servlet.*;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.annotation.Order;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.nio.file.AccessDeniedException;
 
 @Slf4j(topic = "AuthFilter")
@@ -29,7 +32,15 @@ public class AuthFilter implements Filter {
         this.jwtUtil = jwtUtil;
     }
 
+    private void createJsonResponse(ServletResponse res, int status, String errorMessage) throws IOException {
+        HttpServletResponse response = (HttpServletResponse) res;
+        response.setStatus(status);
+        response.setContentType("application/json;charset=UTF-8");
 
+        PrintWriter out = response.getWriter();
+        out.print("{\"code\":" + status + ",\"message\":\"" + errorMessage + "\"}");
+        out.flush();
+    }
     @Override
     public void doFilter(ServletRequest servletRequest, ServletResponse res, FilterChain chain) throws IOException, ServletException {
 
@@ -51,7 +62,8 @@ public class AuthFilter implements Filter {
             if (StringUtils.hasText(tokenValue)) {
                 String token = jwtUtil.substringToken(tokenValue);
                 if (!jwtUtil.validateToken(token)) {
-                    throw new IllegalAccessError("토큰 에러");
+                    createJsonResponse(res, HttpStatus.FORBIDDEN.value(), "토큰 에러");
+                    return;
                 }
 
                 //여기서 저장한 값 => 유저 정보
@@ -61,7 +73,7 @@ public class AuthFilter implements Filter {
                 req.setAttribute("role", user.getRole());
                 chain.doFilter(req, res);
             } else {
-                throw new IllegalAccessError("권한 없음");
+                createJsonResponse(res, HttpStatus.FORBIDDEN.value(), "권한 없음");
             }
         }
 
