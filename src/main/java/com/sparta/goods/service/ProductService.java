@@ -33,8 +33,7 @@ public class ProductService {
         return products.map(ProductResponseDto::new);
     }
 
-    public ProductResponseDto getProductById(Long productId) {
-       Product product = productRepository.findById(productId).orElseThrow(()-> new IllegalArgumentException("아이디에 해당하는 상품이 없습니다."));
-       return new ProductResponseDto(product);
+    public Product getProductById(Long productId) {
+       return productRepository.findById(productId).orElseThrow(()-> new IllegalArgumentException("아이디에 해당하는 상품이 없습니다."));
     }
 }
