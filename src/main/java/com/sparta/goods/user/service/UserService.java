@@ -1,15 +1,16 @@
 package com.sparta.goods.user.service;
 
+
 import com.sparta.goods.user.dto.LoginRequestDto;
 import com.sparta.goods.user.dto.SignupRequestDto;
 import com.sparta.goods.user.dto.SignupResponseDto;
 import com.sparta.goods.user.entity.User;
-import com.sparta.goods.util.JwtUtil;
 import com.sparta.goods.user.repository.UserRepository;
-import jakarta.transaction.Transactional;
+import com.sparta.goods.util.JwtUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 

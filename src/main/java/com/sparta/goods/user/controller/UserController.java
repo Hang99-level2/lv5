@@ -1,12 +1,10 @@
 package com.sparta.goods.user.controller;
 
-import com.sparta.goods.user.dto.LoginRequestDto;
-import com.sparta.goods.user.dto.LoginResponseDto;
+
 import com.sparta.goods.user.dto.SignupRequestDto;
 import com.sparta.goods.user.dto.SignupResponseDto;
-import com.sparta.goods.util.JwtUtil;
 import com.sparta.goods.user.service.UserService;
-import jakarta.servlet.http.HttpServletResponse;
+import com.sparta.goods.util.JwtUtil;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -27,13 +25,6 @@ public class UserController {
     public ResponseEntity<SignupResponseDto> signup(@Valid @RequestBody SignupRequestDto signupRequestDto) {
         SignupResponseDto signupResponseDto = userService.signup(signupRequestDto);
         return ResponseEntity.ok(signupResponseDto);
-    }
-
-    @PostMapping("/users/login")
-    public ResponseEntity<LoginResponseDto> login(@RequestBody LoginRequestDto loginRequestDto, HttpServletResponse res) {
-        String token = userService.login(loginRequestDto);
-        jwtUtil.addJwtToCookie(token, res);
-        return ResponseEntity.ok(new LoginResponseDto(token));
     }
 }
 

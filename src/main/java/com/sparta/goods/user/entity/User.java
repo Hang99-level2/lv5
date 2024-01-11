@@ -1,5 +1,6 @@
 package com.sparta.goods.user.entity;
 
+
 import com.sparta.goods.user.dto.SignupRequestDto;
 import jakarta.persistence.*;
 import lombok.Getter;
